@@ -100,6 +100,7 @@ sh patches/apply-patches.sh %{source_directory}
 
 #make -C %{source_directory} clean
 make -C %{source_directory} defconfig KBUILD_DEFCONFIG=$defconfig_name
+make -C %{source_directory}
 
 %if %{build_Image}
 make -C %{source_directory} -j$(nproc) Image
