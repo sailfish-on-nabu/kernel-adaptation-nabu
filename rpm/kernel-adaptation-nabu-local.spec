@@ -9,8 +9,8 @@
 
 # Crossbuild toolchain to use
 %define crossbuild 1
-%define clangtriple aarch64-meego-linux-gnu-
-%define crosscompile aarch64-meego-linux-gnu-
+%define clangtriple aarch64-suse-linux-
+%define crosscompile aarch64-suse-linux-
 %define crosscompile32 arm-linux-androideabi-
 
 %define kcflags "KCFLAGS=-Wno-error=implicit-function-declaration -Wno-error=missing-prototypes"

@@ -45,21 +45,20 @@ Name:           kernel-adaptation-%{rpm_device}
 Summary:        Kernel adaptation for %{rpm_device}
 Group:          System
 License:        GPLv2
-Version:        2.6
 Release:        1
 Provides:       kernel
 Source:         %{name}-%{version}.tar.bz2
-#Requires(pre):  kmod >= 9
+Requires(pre):  kmod >= 9
 BuildRequires:  pkgconfig(ncurses)
 BuildRequires:  pkgconfig(openssl)
-BuildRequires:  mer-kernel-checks
-BuildRequires:  kmod >= 9
+#BuildRequires:  kmod >= 9
 #BuildRequires:  perl
 #BuildRequires:  fdupes
 BuildRequires:  flex
 BuildRequires:  bison
 BuildRequires:  bc
-#!BuildIgnore:  rpmlint-mini
+BuildRequires:  gmp-devel
+BuildRequires:  openssl
 %if 0%{?crossbuild:1}
 BuildRequires:  cross-%{crossbuild}-gcc
 BuildRequires:  cross-%{crossbuild}-binutils
@@ -83,9 +82,15 @@ mkdir -p %{_tmpdir}
 
 export ARCH=%{kernel_arch}
 export LOCALVERSION="-%{device}"
+export HOSTLDFLAGS=%{hostldflags}
+export INSTALL_MOD_PATH=/lib/
 
 %if 0%{?crossbuild:1}
-export CROSS_COMPILE=%{crossbuild}-meego-linux-gnu-
+export ARCH=%{kernel_arch}
+export CLANG_TRIPLE=%{clangtriple}
+export CROSS_COMPILE=%{crosscompile}
+export CROSS_COMPILE32=%{crosscompile32}
+
 # FIXME? Shouldn't be needed
 export PATH=/opt/cross/bin/:$PATH
 %endif
@@ -98,28 +103,27 @@ defconfig_name=$(basename %{defconfig})
 sh patches/apply-patches.sh %{source_directory}
 %endif
 
-#make -C %{source_directory} clean
-make -C %{source_directory} defconfig KBUILD_DEFCONFIG=$defconfig_name
-make -C %{source_directory}
+make -C %{source_directory} clean
+make -C %{source_directory} %{kcflags} defconfig KBUILD_DEFCONFIG=$defconfig_name
 
 %if %{build_Image}
-make -C %{source_directory} -j$(nproc) Image
+make -C %{source_directory} -j$(nproc) %{kcflags} Image
 %endif
 
 %if %{build_uImage}
-make -C %{source_directory} -j$(nproc) uImage
+make -C %{source_directory} -j$(nproc) %{kcflags} uImage
 %endif
 
 %if %{build_zImage}
-make -C %{source_directory} -j$(nproc) zImage
+make -C %{source_directory} -j$(nproc) %{kcflags} zImage
 %endif
 
 %if %{build_modules}
-make -C %{source_directory} -j$(nproc) modules
+make -C %{source_directory} -j$(nproc) %{kcflags} modules
 %endif
 
 %if 0%{?devicetrees:1}
-make -C %{source_directory} -j$(nproc) dtbs
+make -C %{source_directory} -j$(nproc) %{kcflags} dtbs
 %endif
 
 %install
@@ -151,5 +155,8 @@ make -C %{source_directory} modules_install INSTALL_MOD_PATH=%{buildroot}
 
 # Build filelist
 find %{buildroot} ! \( -type d \) | sed -e s,"%{buildroot}",,g> %{_tmpdir}/kernel-adaptation.files
+
+%post
+depmod
 
 %files -f %{_tmpdir}/kernel-adaptation.files
