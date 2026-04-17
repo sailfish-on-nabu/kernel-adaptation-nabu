@@ -8,7 +8,7 @@
 %define hostldflags ""
 
 # Crossbuild toolchain to use
-%define crossbuild 1
+%define crossbuild aarch64
 %define clangtriple aarch64-suse-linux-
 %define crosscompile aarch64-suse-linux-
 %define crosscompile32 arm-linux-androideabi-

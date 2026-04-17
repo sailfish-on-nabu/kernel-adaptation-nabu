@@ -6,9 +6,8 @@
 
 %define makeopts LLVM=1 LLVM_IAS=1
 %define hostldflags ""
-
 # Crossbuild toolchain to use
-%define crossbuild 1
+%define crossbuild aarch64
 %define clangtriple aarch64-meego-linux-gnu-
 %define crosscompile aarch64-meego-linux-gnu-
 %define crosscompile32 arm-linux-androideabi-
