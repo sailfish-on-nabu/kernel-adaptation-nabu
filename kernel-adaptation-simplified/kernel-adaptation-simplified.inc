@@ -100,7 +100,7 @@ defconfig_name=$(basename %{defconfig})
 
 %if 0%{?apply_patches:1}
 #Apply any patches
-sh patches/apply-patches.sh %{source_directory}
+#sh patches/apply-patches.sh %{source_directory}
 %endif
 
 make -C %{source_directory} clean
