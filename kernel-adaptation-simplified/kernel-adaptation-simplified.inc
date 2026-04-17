@@ -59,7 +59,7 @@ BuildRequires:  bison
 BuildRequires:  bc
 BuildRequires:  gmp-devel
 BuildRequires:  openssl
-BuildRequires:  python3-devel python3
+BuildRequires:  python3-devel python3-base
 %if 0%{?crossbuild:1}
 BuildRequires:  cross-%{crossbuild}-gcc
 BuildRequires:  cross-%{crossbuild}-binutils
