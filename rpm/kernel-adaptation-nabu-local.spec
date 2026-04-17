@@ -45,6 +45,5 @@
 %define devicetrees qcom/sm8150-xiaomi-nabu.dtb
 
 Version:        6.14.11
-Release:        1
 
 %include kernel-adaptation-simplified/kernel-adaptation-simplified.inc
